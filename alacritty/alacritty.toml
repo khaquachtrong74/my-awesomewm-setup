@@ -1,0 +1,56 @@
+[window]
+dimensions={ columns = 50, lines = 20}
+padding = { x = 10, y = 5}
+opacity = 0.67
+blur = false 
+title = "Intern Wizard"
+startup_mode = "Windowed"#"Windowed" # Maximized | Fullscreen
+class = { instance = "Alacritty", general = "Alacrity" }
+decorations = "none"
+decorations_theme_variant = "none"#"Light" #"Dark"  # | Light
+[scrolling]
+history = 10000 # Default 10000
+multiplier = 5 # Default= 3
+[font]
+normal = { family = "JetBrainsMono Nerd font", style = "Regular"}
+size = 7
+offset= { x = 1, y = 8}
+[colors]
+# Default colors
+[colors.primary]
+background = '#292C3E'
+foreground = '#EBEBEB'
+# Cursor colors
+[colors.cursor]
+text = '#EBEBEB'
+cursor = '#FF261E'
+# Normal colors
+[colors.normal]
+black   = '#0d0d0d'
+red     = '#FF301B'
+green   = '#A0E521'
+yellow  = '#FFC620'
+blue    = '#1BA6FA'
+magenta = '#8763B8'
+cyan    = '#21DEEF'
+white   = '#EBEBEB'
+# Bright colors
+[colors.bright]
+black   = '#6D7070'
+red     = '#FF4352'
+green   = '#B8E466'
+yellow  = '#FFD750'
+blue    = '#1BA6FA'
+magenta = '#A578EA'
+cyan    = '#73FBF1'
+white   = '#FEFEF8'
+#[terminal]
+#shell = {program = "wsl.exe", args = ["~"]}
+
+# shell = "zellij"
+# debug otions are meant to help troubleshoot issues with Alacritty
+# These can change or be removed entirely without warning
+# So their stability shouldn't be relied upon
+[debug]
+render_timer=false
+highlight_damage = false # | if u want to hit yourself, you can select true
