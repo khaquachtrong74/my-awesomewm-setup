@@ -6,7 +6,7 @@
 local k = vim.keycode
 -- NORMAL -- 
 vim.keymap.set("n","<TAB>", "<cmd>Neotree toggle<CR>", {desc = "Neotree toggle", silent=true})
-vim.keymap.set("n","<C-s>",function()
+vim.keymap.set({"n","i"},"<C-s>",function()
 vim.cmd("w")
 print("✅Save success, Good job!")
 end,{

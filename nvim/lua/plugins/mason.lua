@@ -14,12 +14,14 @@ return{
                     "clangd",
                     "lua_ls",
                     "cmake",
+                    "pyright"
                 }
             }
             local lspconfig = require("lspconfig")
               lspconfig.clangd.setup({})
               lspconfig.lua_ls.setup({})
               lspconfig.cmake.setup({})
+              lspconfig.pyright.setup({})
             require("lspconfig").lua_ls.setup({
                 settings = {
                     Lua = {

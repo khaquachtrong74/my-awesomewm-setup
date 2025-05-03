@@ -11,3 +11,4 @@ require("lazy").setup("plugins")
 require("keymaps")
 require("base")
 
+vim.cmd('colorscheme kanagawa-dragon')

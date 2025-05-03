@@ -1,4 +1,35 @@
 return{
+    {
+    "rebelot/kanagawa.nvim",
+    priority = 1000,
+    config = function()
+        require('kanagawa').setup({
+        compile = false,
+        undercurl = true,
+        commentStyle = { italic = true },
+        functionStyle = { bold = true },
+        keywordStyle = { italic = true },
+        statementStyle = { bold = true },
+        typeStyle = { bold = true },
+        transparent = false, -- bạn muốn xuyên nền thì bật true
+        terminalColors = true,
+        theme = "dragon", -- chọn phong cách dragon
+        background = {
+          dark = "dragon",
+          light = "lotus"
+        }
+      })
+      vim.cmd("colorscheme kanagawa-dragon")
+    end
+    },
+    {
+      "projekt0n/github-nvim-theme",
+      priority = 1000,
+      config = function()
+        require('github-theme').setup({
+        })
+      end
+    },
     { 'nvim-lualine/lualine.nvim',
         config = function()
             require('lualine').setup {
@@ -50,15 +81,5 @@ return{
         --      vim.cmd('colorscheme tokyonight')
         end
     },
-    {
-        'projekt0n/github-nvim-theme',
-        name = 'github-theme',
-        lazy = false, -- without
-        priority= 1000,
-        config = function()
-            require('github-theme').setup({})
-        vim.cmd('colorscheme github_dark')
-        end,
-    },  
 
 }
