@@ -13,37 +13,43 @@ history = 10000 # Default 10000
 multiplier = 5 # Default= 3
 [font]
 normal = { family = "JetBrainsMono Nerd font", style = "Regular"}
+#normal = {family = "Sans"}
 size = 9
 offset= { x = 1, y = 8}
-[colors]
-# Default colors
+
+
+# Alacritty Colors - Kanagawa Dragon Style
+
 [colors.primary]
-background = '#292C3E'
-foreground = '#EBEBEB'
-# Cursor colors
+background = '#181616'    # Nền đen nâu cổ
+foreground = '#c5c9c5'    # Text trắng đục nhạt
+
 [colors.cursor]
-text = '#EBEBEB'
-cursor = '#FF261E'
-# Normal colors
+text = '#181616'          # Cursor nền
+cursor = '#c8c093'        # Cursor vàng cát
+
 [colors.normal]
-black   = '#0d0d0d'
-red     = '#FF301B'
-green   = '#A0E521'
-yellow  = '#FFC620'
-blue    = '#1BA6FA'
-magenta = '#8763B8'
-cyan    = '#21DEEF'
-white   = '#EBEBEB'
-# Bright colors
+black   = '#0d0c0c'
+red     = '#c4746e'
+green   = '#8a9a7b'
+yellow  = '#c4b28a'
+blue    = '#8ba4b0'
+magenta = '#a292a3'
+cyan    = '#8ea4a2'
+white   = '#c8c093'
+
 [colors.bright]
-black   = '#6D7070'
-red     = '#FF4352'
-green   = '#B8E466'
-yellow  = '#FFD750'
-blue    = '#1BA6FA'
-magenta = '#A578EA'
-cyan    = '#73FBF1'
-white   = '#FEFEF8'
+black   = '#1f1f28'
+red     = '#e46876'
+green   = '#98bb6c'
+yellow  = '#e6c384'
+blue    = '#7fb4ca'
+magenta = '#938aa9'
+cyan    = '#7aa89f'
+white   = '#dcd7ba'
+[colors]
+draw_bold_text_with_bright_colors = true
+
 #[terminal]
 #shell = {program = "wsl.exe", args = ["~"]}
 
