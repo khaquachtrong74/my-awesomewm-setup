@@ -19,15 +19,6 @@ M.rules = {
         }
     },
 
-    -- Set Firefox to always map on tag "2"
-    {
-        rule = { class = "Firefox" },
-        properties = {
-            screen = 1,
-            tag    = "2"
-        }
-    },
-
     -- Floating clients
     {
         rule_any = {
@@ -43,13 +34,11 @@ M.rules = {
         },
         properties = { floating = true }
     },
-
     -- Add titlebars to normal clients and dialogs
     {
         rule_any = { type = { "normal", "dialog" } },
         properties = { titlebars_enabled = true }
     }
 }
-
 return M
 

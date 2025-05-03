@@ -9,6 +9,5 @@ return {
     awful.layout.suit.spiral,
     awful.layout.suit.min,
     awful.layout.suit.magnifier,
-    awful.layout.suit.corner.nw,
-
+    awful.layout.suit.corner.ne,
 }

@@ -1,11 +1,33 @@
 local awful = require("awful")
 local gears = require("gears")
 local modkey = "Mod4"
--- local beautiful = require("beautiful")
 local menubar = require("menubar")
 local hotkeys_popup = require("awful.hotkeys_popup")
+local terminal = "alacritty"
 -- {{{ Key bindings
 globalkeys = gears.table.join(
+    
+    awful.key({ }, "XF86AudioRaiseVolume", function()
+        awful.spawn("pamixer --increase 5")
+    end),
+    awful.key({ }, "XF86AudioLowerVolume", function()
+        awful.spawn("pamixer --decrease 5")
+    end),
+     awful.key({ }, "XF86AudioMute", function()
+        awful.spawn("pamixer --toggle-mute")
+    end),
+    awful.key({ }, "XF86MonBrightnessUp",
+        function ()
+            awful.spawn("brightnessctl set +10%")
+        end,
+        {description = "increase brightness", group = "hardware"}
+    ),
+    awful.key({ }, "XF86MonBrightnessDown",
+        function ()
+            awful.spawn("brightnessctl set 10%-")
+        end,
+        {description = "decrease brightness", group = "hardware"}
+    ),
     awful.key({ modkey,           }, "s",      hotkeys_popup.show_help,
               {description="show help", group="awesome"}),
     awful.key({ modkey,           }, "Left",   awful.tag.viewprev,
@@ -51,8 +73,8 @@ globalkeys = gears.table.join(
         {description = "go back", group = "client"}),
 
     -- Standard program
-    awful.key({ modkey,           }, "Return", function () awful.spawn(terminal) end,
-              {description = "open a terminal", group = "launcher"}),
+    awful.key({ modkey }, "Return", function () awful.spawn(terminal) end, {description = "open a terminal", group = "launcher"}),
+    awful.key({modkey, "Shift"}, "s", function() awful.spawn("flameshot gui") end, {description = "Open screen shot", group = "launcer"}),
     awful.key({ modkey, "Control" }, "r", awesome.restart,
               {description = "reload awesome", group = "awesome"}),
     awful.key({ modkey, "Shift"   }, "q", awesome.quit,
@@ -113,6 +135,8 @@ clientkeys = gears.table.join(
             c:raise()
         end,
         {description = "toggle fullscreen", group = "client"}),
+
+
     awful.key({ modkey, "Shift"   }, "c",      function (c) c:kill()                         end,
               {description = "close", group = "client"}),
     awful.key({ modkey, "Control" }, "space",  awful.client.floating.toggle                     ,
@@ -121,8 +145,14 @@ clientkeys = gears.table.join(
               {description = "move to master", group = "client"}),
     awful.key({ modkey,           }, "o",      function (c) c:move_to_screen()               end,
               {description = "move to screen", group = "client"}),
-    awful.key({ modkey,           }, "t",      function (c) c.ontop = not c.ontop            end,
-              {description = "toggle keep on top", group = "client"}),
+    awful.key({ modkey,           }, "t",      
+    function ()
+        local s = awful.screen.focused()
+        if s.mywibox then
+            s.mywibox.visible = not s.mywibox.visible
+        end
+    end,
+    {description = "toggle mywibox", group = "awesome"}),
     awful.key({ modkey,           }, "n",
         function (c)
             -- The client currently has the input focus, so it cannot be

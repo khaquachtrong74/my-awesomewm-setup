@@ -2,6 +2,7 @@
 local beautiful = require("beautiful") 
 local wibox = require("wibox")
 local gears = require("gears")
+local theme = require("theme_light")
 local mytextclock = wibox.widget{
     {
         {
@@ -13,11 +14,8 @@ local mytextclock = wibox.widget{
             widget = wibox.container.margin,
             left = 10, right = 10,
         },
-        bg = beautiful.bg_focus or "#44475a",
-        fg = beautiful.fg_focus or "#f8f8f2",
---        shape = function(cr, width, height)
---                return gears.shape.rounded_rect(cr, width, height, 10)
---            end,
+        bg = theme.bg_normal,
+        fg = theme.fg_normal,
         widget = wibox.container.background,
     },
     widget = wibox.container.margin,

@@ -2,8 +2,10 @@ local awful = require("awful")
 local gears = require("gears")
 local wibox = require("wibox")
 local beautiful = require("beautiful")
+local modkey = "Mod4"
+local theme = require("theme_light")
 local set_wallpaper = function(s)
-    if beautiful.wallpaper then 
+    if beautiful.wallpaper then
         local wallpaper = beautiful.wallpaper
         if type(wallpaper) == "function" then
             wallpaper = wallpaper(s)
@@ -12,32 +14,74 @@ local set_wallpaper = function(s)
     end
 end
 awful.screen.connect_for_each_screen(function(s)
-    -- Wallpaper
-
---    beautiful.get().wallpaper = "/home/nullcore/Documents/images/background.png"
     set_wallpaper(s)
-
-    -- Each screen has its own tag table.
-    awful.tag({ "1", "2", "3", "4", "5"}, s, awful.layout.layouts[1])
-
-    -- Create a promptbox for each screen
+    beautiful.get().wallpaper = "/home/" .. os.getenv("USER") .. "~/.config/awesome/images/background_03.jpg"
+    awful.tag({ "Code", "Web", "Study", "Nothing", "Social"}, s, awful.layout.layouts[1])
     s.mypromptbox = awful.widget.prompt()
+    local taglist_buttons = gears.table.join(
+        awful.button({ }, 1, function(t) t:view_only() end),
+        awful.button({ modkey }, 1, function(t)
+                                  if client.focus then
+                                      client.focus:move_to_tag(t)
+                                  end
+                              end),
+        awful.button({ }, 3, awful.tag.viewtoggle),
+        awful.button({ modkey }, 3, function(t)
+                                  if client.focus then
+                                      client.focus:toggle_tag(t)
+                                  end
+                              end),
+        awful.button({ }, 4, function(t) awful.tag.viewnext(t.screen) end),
+        awful.button({ }, 5, function(t) awful.tag.viewprev(t.screen) end)
+    )
+
+    local tasklist_buttons = gears.table.join(
+                 awful.button({ }, 1, function (c)
+                                          if c == client.focus then
+                                              c.minimized = true
+                                          else
+                                              c:emit_signal(
+                                                  "request::activate",
+                                                  "tasklist",
+                                                  {raise = true}
+                                              )
+                                          end
+                                      end),
+                 awful.button({ }, 3, function()
+                                          awful.menu.client_list({ theme = { width = 250 } })
+                                      end),
+                 awful.button({ }, 4, function ()
+                                          awful.client.focus.byidx(1)
+                                      end),
+                 awful.button({ }, 5, function ()
+                                          awful.client.focus.byidx(-1)
+                                      end))
+
+
     -- Create an imagebox widget which will contain an icon indicating which layout we're using.
     -- We need one layoutbox per screen.
     s.mylayoutbox = awful.widget.layoutbox(s)
     s.mylayoutbox:buttons(gears.table.join(
-                           awful.button({ }, 1, function () awful.layout.inc( 1) end),
-                           awful.button({ }, 3, function () awful.layout.inc(-1) end),
-                           awful.button({ }, 4, function () awful.layout.inc( 1) end),
-                           awful.button({ }, 5, function () awful.layout.inc(-1) end)))
+       awful.button({ }, 1, function () awful.layout.inc( 1) end),
+       awful.button({ }, 3, function () awful.layout.inc(-1) end),
+       awful.button({ }, 4, function () awful.layout.inc( 1) end),
+       awful.button({ }, 5, function () awful.layout.inc(-1) end)))
+
     -- Create a taglist widget 
     s.mytaglist = awful.widget.taglist { 
         screen  = s, 
         filter  = awful.widget.taglist.filter.all, 
-        buttons = taglist_buttons,
         layout = {
             layout = wibox.layout.fixed.horizontal,
         },
+        buttons = taglist_buttons,
+        style = {
+            bg_normal = theme.bg_normal,   -- màu nền tasklist thường
+            bg_focus  = theme.bg_focus,   -- màu nền khi focus
+            fg_focus  = theme.fg_focus,
+            bg_minimize = theme.bg_minimize, -- minimize thì màu xám nhẹ
+        },
+
         widget_template = {
         {
             {
@@ -48,120 +92,67 @@ awful.screen.connect_for_each_screen(function(s)
             },
             --layout = wibox.container.place,
             widget = wibox.container.margin,
-            left = 20,
-            right = 20,
-        },
-        id     = 'background_role',
-        widget = wibox.container.background;
-    }
-} 
+            left = 6,
+            right = 4,
+            },
+            id     = 'background_role',
+            widget = wibox.container.background,
+        }
+    } 
+
 --Create a tasklist widget 
     s.mytasklist = awful.widget.tasklist { 
         screen  = s, 
         filter  = awful.widget.tasklist.filter.currenttags, 
         buttons = tasklist_buttons,
         style = {
-            shape_border_width = 3,
-            shape_border_color = "#9AB5FF",
-            shape = gears.shape.transform(gears.shape.powerline)
+            bg_normal = theme.bg_normal,   -- màu nền tasklist thường
+            bg_focus  = theme.bg_focus,   -- màu nền khi focus
+            bg_minimize = theme.bg_minimize, -- minimize thì màu xám nhẹ
         },
         layout = {
-            --spacing = 10,
-            spacing_widget = {
+            spacing = 8,
+            layout  = wibox.layout.fixed.horizontal
+        },
+        widget_template = {
+            {
                 {
-                    forced_width = 40,
-                    forced_height = 24,
-                    shape = gears.shape.rectangle,
-                    widget       = wibox.widget.separator
+                    id     = 'icon_role',
+                    widget = wibox.widget.imagebox,
+                    resize = true
                 },
-                valign = "left",
-                halign = "center",
-                widget = wibox.container.place,
+                margins = 3,
+                widget  = wibox.container.margin,
             },
-            layout  = wibox.layout.flex.horizontal,
-            spacing = 10 
+            id     = 'background_role',
+            widget = wibox.container.background,
         },
     }
-   
--- create clocktext
     local mytextclock = require("widgets.clock")
-    -- Create the wibox
-    s.mywibox = awful.wibar({ 
-        ontop = true, screen = s,
-        shape = gears.shape.rectangle,
-        width = 250, height = 40,
-        bg = "#ffffff",top = 60,
-        visible = true,
-        --fg = "#000000",
-        border_width = 3,
-        border_color = "#6482ad"
-
-    })
-    
--- widget = wibox.container.margin,
--- Add widgets to the wibox
-
-    s.mywibox:geometry({
-        x = (s.geometry.width - 300) / 2,
-        y = 10,
-        width = 250,
-        height = 40
-    })
-
-    s.mywibox:setup {
-        layout = wibox.layout.align.horizontal,
-        -- Left widgets
-        s.mytaglist,
-        -- Middle widget
-        -- Right widgets
-    }
-    s.clockwibox = wibox({
-        screen = s,
-        width = 260,
-        height = 40,
-        x = 210, -- Position from the right
-        y = 10,                     -- Distance from top
-        visible = true,
-        ontop = true,
-        shape = gears.shape.rounded_rect,
-        bg = "#ffffff",
-        fg = "#000000",
-        border_width = 2,
-        border_color = "#6482ad"
-    })
-
-    -- Setup the clock content
-    s.clockwibox:setup {
-        {
-            mytextclock,
-            widget = wibox.container.margin,
-            left = 8,
-            right = 8,
-            top = 8,
-            bottom = 8,
-        },
-        layout = wibox.layout.align.horizontal,
-    }
-    s.tools_wibox = wibox({
-        screen = s, width = 200, height = 40, x = s.geometry.width - 410,
-        y = 10, visible = true, ontop = true, shape = gears.shape.rounded_rect,
-        bg = "#ffffff", fg = "#000000", border_width = 2, border_color = "#6482ad"
-    })
-    s.tools_wibox:setup {
-        layout = wibox.layout.align.horizontal,
-        {
-            layout = wibox.layout.fixed.horizontal,
-            --volume_widget,
-        },
-        nil,
-        {
-            layout = wibox.layout.fixed.horizontal,
-            --brightness_widget,
-            widget = wibox.container.margin,
-            left = 8,
-            right = 8,
-            top = 8,
-            bottom = 8,
-        },
-    }
+    local mybatterywidget = require("widgets.battery")
+    local cpu_widget = require("widgets.cpu_widget")
+    local ram_widget = require("widgets.ram_widget")
+local left = wibox.layout.fixed.horizontal()
+left:add(s.mytaglist)
+local mid = wibox.layout.fixed.horizontal()
+mid:add(s.mytasklist)
+local right = wibox.layout.fixed.horizontal()
+right:add(mytextclock)
+right:add(cpu_widget)
+right:add(ram_widget)
+right:add(wibox.container.margin(mybatterywidget,10,10,0,0))
+s.mywibox = awful.wibar({ position = "top", screen = s })
+s.mywibox:setup {
+    layout = wibox.layout.align.horizontal,
+    left,
+    mid,
+    right,
+}
+awful.key({ modkey,       }, "t",
+    function()
+        for s in screen do
+            s.mywibox.visible =  not s.mywibox.visible
+        end
+    end,
+    {description = "on/off"})
 end)
