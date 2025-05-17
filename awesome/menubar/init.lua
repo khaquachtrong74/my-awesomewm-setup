@@ -29,12 +29,12 @@ local gmath = require("gears.math")
 local awful = require("awful")
 local gfs = require("gears.filesystem")
 local common = require("awful.widget.common")
-local theme = require("beautiful")
+local beautiful = require("beautiful")
 local wibox = require("wibox")
 local gcolor = require("gears.color")
 local gstring = require("gears.string")
 local gdebug = require("gears.debug")
-local theme_light = require("theme_light")
+local theme = require("theme")
 local function get_screen(s)
     return s and capi.screen[s]
 end
@@ -62,6 +62,7 @@ end
 local menubar = { menu_entries = {} }
 menubar.menu_gen = require("menubar.menu_gen")
 menubar.utils = require("menubar.utils")
+local menubar_utils = require("menubar.utils")
 local compute_text_width = menubar.utils.compute_text_width
 -- Options section
 --- When true the .desktop files will be reparsed only when the
@@ -82,13 +83,11 @@ menubar.show_categories = true
 -- @tfield number geometry.width A forced width
 -- @tfield number geometry.height A forced height
 menubar.geometry = { width = 500,
-                     height = 50,
-                     x = nil,
-                     y = 200 }
+                     height = 400}
 
 --- Width of blank space left in the right side.
 -- @tfield number right_margin
-menubar.right_margin = theme.xresources.apply_dpi(8)
+menubar.right_margin = beautiful.xresources.apply_dpi(8)
 
 --- Label used for "Next page", default "▶▶".
 -- @tfield[opt="▶▶"] string right_label
@@ -101,7 +100,7 @@ menubar.left_label = "◀◀"
 -- awful.widget.common.list_update adds three times a margin of dpi(4)
 -- for each item:
 -- @tfield number list_interspace
-local list_interspace = theme.xresources.apply_dpi(4) * 3
+local list_interspace = beautiful.xresources.apply_dpi(4) * 3
 
 --- Allows user to specify custom parameters for prompt.run function
 -- (like colors).
@@ -115,7 +114,7 @@ local current_category = nil
 local shownitems = nil
 local instance = nil
 
-local common_args = { w = wibox.layout.fixed.horizontal(),
+local common_args = { w = wibox.layout.fixed.vertical(),
                       data = setmetatable({}, { __mode = 'kv' }) }
 
 --- Wrap the text with the color span tag.
@@ -130,16 +129,15 @@ end
 -- @param o The menu item.
 -- @return item name, item background color, background image, item icon.
 local function label(o)
-    local fg_color = "#ffffff"
-    local bg_color = theme.menubar_bg_normal or theme.menu_bg_normal or theme.bg_normal
+    local fg_color = theme.fg_normal
+    local bg_color = theme.wrap_bg
     if o.focused then
-        fg_color = "#000000" 
-        bg_color = "#ffffff" 
+        fg_color = theme.fg_focus
+        bg_color = theme.bg_focus
     end
+    print(o.icon)
     return colortext(gstring.xml_escape(o.name), fg_color),
-           bg_color,
-           "#ffffff",
-           o.icon
+            bg_color, bg_color, o.icon
 end
 
 local function load_count_table()
@@ -216,20 +214,18 @@ local function get_current_page(all_items, query, scr)
     end
     local available_space = instance.geometry.width - menubar.right_margin -
         menubar.right_label_width - menubar.left_label_width -
-        compute_text_width(query, scr) - instance.prompt.width
+       compute_text_width(query, scr) - instance.prompt.width
 
     local width_sum = 0
     local current_page = {}
     for i, item in ipairs(all_items) do
-        item.width = item.width or
-            compute_text_width(item.name, scr) +
-            (item.icon and instance.geometry.height or 0) + list_interspace
+        item.width = item.width or (compute_text_width(item.name, scr) + (item.icon and instance.geometry.height or 0) + list_interspace)
         if width_sum + item.width > available_space then
             if current_item < i then
-                table.insert(current_page, { name = menubar.right_label, icon = nil })
+                table.insert(current_page, { name ="ᕕ( ᐛ )ᕗ", icon = nil })
                 break
             end
-            current_page = { { name = menubar.left_label, icon = nil }, item, }
+            current_page = { { name = "(❍ᴥ❍ʋ)", icon = nil }, item, }
             width_sum = item.width
         else
             table.insert(current_page, item)
@@ -339,7 +335,7 @@ local function menulist_update(scr)
 
     if #shownitems > 0 then
         -- Insert a run item value as the last choice
-        table.insert(shownitems, { name = "Exec: " .. query, cmdline = query, icon = nil })
+        table.insert(shownitems, { name = "(•-•)⌐: " .. query, cmdline = query, icon = nil })
 
         if current_item > #shownitems then
             current_item = #shownitems
@@ -372,10 +368,10 @@ end
 -- @param comm The current command in the prompt.
 -- @return if the function processed the callback, new awful.prompt command, new awful.prompt prompt text.
 local function prompt_keypressed_callback(mod, key, comm)
-    if key == "Left" or (mod.Control and key == "j") then
+    if key == "Up" or (mod.Control and key == "j") then
         current_item = math.max(current_item - 1, 1)
         return true
-    elseif key == "Right" or (mod.Control and key == "k") then
+    elseif key == "Down" or (mod.Control and key == "k") then
         current_item = current_item + 1
         return true
     elseif key == "BackSpace" then
@@ -414,7 +410,7 @@ end
 -- @param[opt] scr Screen.
 function menubar.show(scr)
     scr = get_screen(scr or awful.screen.focused() or 1)
-    local border_width = theme.menubar_border_width or theme.menu_border_width or 0
+    local border_width = beautiful.menubar_border_width or beautiful.menu_border_width or 0
 
     if not instance then
         -- Add to each category the name of its key in all_categories
@@ -429,17 +425,17 @@ function menubar.show(scr)
         instance = {
             wibox = wibox{
                 ontop = true,
-                bg = theme.bg_normal,
-                fg = theme_light.fg_tool_normal,
+                bg = theme.bg_focus,
+                fg = theme.fg_tool_normal,
                 border_width = 2,
-                border_color = "#ffffff",
+                border_color = "#291486",
             },
             widget = common_args.w,
             prompt = awful.widget.prompt(),
             query = nil,
             count_table = nil,
         }
-        local layout = wibox.layout.fixed.horizontal()
+        local layout = wibox.layout.fixed.vertical()
         layout:add(instance.prompt)
         layout:add(instance.widget)
         instance.wibox:set_widget(layout)
@@ -454,9 +450,10 @@ function menubar.show(scr)
     -- Set position and size
     local scrgeom = scr.workarea
     local geometry = menubar.geometry
-    instance.geometry = {x = 700 or scrgeom.x,
-                             y = 100 or scrgeom.y,
-                             height = geometry.height or gmath.round(theme.get_font_height() * 1.5),
+    instance.geometry = {x = 100 or scrgeom.x,
+                             y = 50 or scrgeom.y,
+                             height =  440 or gmath.round(beautiful.get_font_height() * 1.5),
+
                              width = (geometry.width or scrgeom.width) - border_width * 2}
     instance.wibox:geometry(instance.geometry)
 
@@ -467,18 +464,18 @@ function menubar.show(scr)
     local prompt_args = menubar.prompt_args or {}
 
     awful.prompt.run(setmetatable({
-        prompt              = "<span foreground='#ffffff'> Run: </span>",
+        prompt              = "☉ ‿ ⚆ : ",
         textbox             = instance.prompt.widget,
         completion_callback = awful.completion.shell,
         history_path        = gfs.get_cache_dir() .. "/history_menu",
         done_callback       = menubar.hide,
         changed_callback    = function(query)
             instance.query = query
-            instance.prompt.widget:set_markup("<span foreground='#ffffff'> Run: " .. gstring.xml_escape(query) .. "</span>")
+           instance.prompt.widget:set_markup( "☉ ‿ ⚆ : " .. gstring.xml_escape(query))
             menulist_update(scr)
         end,
         keypressed_callback = prompt_keypressed_callback,
-        fg                  = "#ffffff"
+        fg                  = theme.fg_normal
     }, {__index=prompt_args}))
     instance.wibox.visible = true
 end

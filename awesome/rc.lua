@@ -5,21 +5,16 @@ pcall(require, "luarocks.loader")
 -- Standard awesome library
 local gears = require("gears")
 local awful = require("awful")
-local switch_theme = require("theme_switcher")
-local modkey = "Mod4" require("awful.autofocus")
-local mainmenu
-local rules
--- Widget and layout library
--- Theme handling library
+local modkey = "Mod4" require("awful.autofocus") -- make focus screen when switch tag
 local beautiful = require("beautiful")
 -- {{{ Error handling
 require("core.erros")
 -- Themes define colours, icons, font and wallpapers.
-beautiful.init("/home/" .. os.getenv("USER") .. "/.config/awesome/theme_light.lua")
+beautiful.init("/home/" .. os.getenv("USER") .. "/.config/awesome/theme.lua")
 beautiful.border_radius = 4
-beautiful.get().wallpaper = "/home/" .. os.getenv("USER") .. "/.config/awesome/images/background_03.jpg"
-beautiful.useless_gap = 2
-beautiful.font = "JetBrainsMono Nerd Font 9"
+beautiful.get().wallpaper = "/home/" .. os.getenv("USER") .. "/.config/awesome/images/background.jpg"
+--beautiful.useless_gap = 2
+beautiful.font = "JetBrainsMono Nerd Font 12"
 awful.spawn.with_shell("picom --config ~/.config/picom/picom.conf")
 gears.timer {
     timeout = 60, -- check every 60 seconds
@@ -34,13 +29,14 @@ gears.timer {
     end
 }
 awful.layout.layouts = require("layout")
-mainmenu = require("mainmenu")
+--mainmenu = require("mainmenu")
 require("signals")
 require("ui.wibar")
-require("keys.global")
+local global = require("keys.global")
 awful.rules.rules = require("rules").rules
-root.buttons(gears.table.join(
-    awful.button({ }, 3, function () mymainmenu:toggle() end),
-    awful.button({ }, 4, awful.tag.viewnext),
-    awful.button({ }, 5, awful.tag.viewprev)
-))
+root.keys(global)
+--root.buttons(gears.table.join(
+--    awful.button({ }, 3, function () mainmenu:toggle() end),
+--    awful.button({ }, 4, awful.tag.viewnext),
+--    awful.button({ }, 5, awful.tag.viewprev)
+--))

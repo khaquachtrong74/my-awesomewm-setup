@@ -121,7 +121,7 @@ local directory_matches_size = function(self, subdirectory, icon_size)
 end
 
 local directory_size_distance = function(self, subdirectory, icon_size)
-    local kind, size, min_size, max_size, threshold = self.index_theme:get_per_directory_keys(subdirectory)
+local kind, size, min_size, max_size, threshold = self.index_theme:get_per_directory_keys(subdirectory)
 
     if kind == "Fixed" then
         return math.abs(icon_size - size)
@@ -224,7 +224,7 @@ end
 -- @tparam number icon_size Prefereable icon size
 -- @treturn string Absolute path to the icon file, or nil if not found
 function icon_theme:find_icon_path(icon_name, icon_size)
-    icon_size = icon_size or 16
+    icon_size =  16
     if not icon_name or icon_name == "" then
         return nil
     end

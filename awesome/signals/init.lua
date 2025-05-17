@@ -1,30 +1,8 @@
 local awful = require("awful")
 local gears = require("gears")
-local beautiful = require("theme_light")
-client.connect_signal("manage", function (c)
-    c.opacity = 0
-        c.shape = function(cr, width, height)
-            gears.shape.rectangle(cr, width, height)
-        end
-        if awesome.startup
-          and not c.size_hints.user_position
-          and not c.size_hints.program_position then
-            -- Prevent clients from being unreachable after screen count changes.
-            awful.placement.no_offscreen(c) end local fade_timer = gears.timer{
-            timeout = 0.01,
-            autostart = true,
-            call_now = true,
-            callback = function()
-                if c.opacity < 1 then
-                c.opacity = c.opacity + 0.05
-                else
-                    c.opacity = 1
-                    fade_timer:stop()
-                end
-            end
-        }
-    end)
+local theme = require("theme")
 
+local tasklist = require('widgets.tasklist')
 client.connect_signal("request::titlebars", function(c)
     -- buttons for the titlebar
     local buttons = gears.table.join(
@@ -39,15 +17,16 @@ client.connect_signal("request::titlebars", function(c)
     )
 end)
 -- Enable sloppy focus, so that focus follows mouse.
-client.connect_signal("mouse::enter", function(c)
-    c:emit_signal("request::activate", "mouse_enter", {raise = false})
-end)
-client.connect_signal("focus", function(c) c.border_color = beautiful.border_focus end)
-client.connect_signal("unfocus", function(c) c.border_color = beautiful.border_normal end)
+--client.connect_signal("mouse::enter", function(c)
+--    c:emit_signal("request::activate", "mouse_enter", {raise = false})
+--end)
+client.connect_signal("focus", function(c) c.border_color = theme.border_focus end)
+client.connect_signal("unfocus", function(c) c.border_color = theme.border_normal end)
 client.connect_signal("property::fullscreen", function (c)
     for s in screen do
         if s == c.screen then
             s.mywibox.visible     = not c.fullscreen
+            tasklist.visible = s.mywibox.visible
         end
     end
 end)

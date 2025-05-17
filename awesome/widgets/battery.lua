@@ -1,21 +1,17 @@
 local wibox = require("wibox")
 local gears = require("gears")
 local naughty = require("naughty")
+local func_sync_icon = require('function.func')
 naughty.config.defaults.position = "top_right" 
-
-local batteryiconwidget = wibox.widget{
-    id = "icon_battery",
-    widget = wibox.widget.imagebox,
-}
-local batteryiconw = wibox.container.margin(batteryiconwidget,10,10,5,5)
+local batteryiconwidget = func_sync_icon.make_icon('/home/nullcore/.config/awesome/images/battery.png')
 local batterytextwidget = wibox.widget{
         icon = "text",
         widget = wibox.widget.textbox,
 }
 local mybatterywidget = wibox.widget{
     layout = wibox.layout.fixed.horizontal,
+    batteryiconwidget,
     batterytextwidget,
-    batteryiconw,
 }
 local function get_battery ()
         local handler = io.popen("upower -i $(upower -e | grep BAT) | grep percentage")
@@ -30,9 +26,9 @@ gears.timer {
     autostart = true,
     call_now = true,
     callback = function()
-        local percent = get_battery() 
+        local percent = get_battery()
         batteryiconwidget.image = os.getenv("HOME") .. "/.config/awesome/images/battery.png"
-        batterytextwidget.text = percent 
+        batterytextwidget.text = percent .. "%"
     end
 }
 local battery_notify
@@ -40,7 +36,7 @@ mybatterywidget:connect_signal("mouse::enter", function()
     local status = io.popen("upower -i $(upower -e | grep BAT) | grep -E 'state|percentage|time'"):read("*a")
     battery_notify=naughty.notify(
         {
-            title = "🔋 Battery Status",
+            title = "Battery Status",
             text = status,
             timeout = 5
         }

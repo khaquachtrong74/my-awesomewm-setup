@@ -13,7 +13,7 @@ end,{
 desc = "Save & cheer",
 silent = true
 })
-vim.keymap.set("n", "<C-q>","<cmd>q<CR>",{desc = "Quit",silent=true})
+vim.keymap.set({"n","i"}, "<C-q>","<cmd>q<CR>",{desc = "Quit",silent=true})
 -- telescope setting map
 vim.keymap.set("n", "<leader>f", function()
     require("telescope.builtin").find_files({

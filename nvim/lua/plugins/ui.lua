@@ -13,13 +13,7 @@ return{
         typeStyle = { bold = true },
         transparent = false, -- bạn muốn xuyên nền thì bật true
         terminalColors = true,
-        theme = "dragon", -- chọn phong cách dragon
-        background = {
-          dark = "dragon",
-          light = "lotus"
-        }
       })
-      vim.cmd("colorscheme kanagawa-dragon")
     end
     },
     {

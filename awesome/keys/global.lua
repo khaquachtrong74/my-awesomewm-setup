@@ -4,9 +4,20 @@ local modkey = "Mod4"
 local menubar = require("menubar")
 local hotkeys_popup = require("awful.hotkeys_popup")
 local terminal = "alacritty"
+local mainmenu = require('mainmenu')
+local beautiful = 'beautiful'
+
+local tasklist = require('widgets.tasklist')
 -- {{{ Key bindings
-globalkeys = gears.table.join(
-    
+local globalkeys = gears.table.join(
+    awful.key({modkey}, '[', function()
+         awful.tag.incgap(2)
+    end
+    ),
+    awful.key({modkey}, ']', function()
+         awful.tag.incgap(-2)
+    end
+    ),
     awful.key({ }, "XF86AudioRaiseVolume", function()
         awful.spawn("pamixer --increase 5")
     end),
@@ -49,7 +60,8 @@ globalkeys = gears.table.join(
         end,
         {description = "focus previous by index", group = "client"}
     ),
-    awful.key({ modkey,           }, "w", function () mymainmenu:show() end,
+    awful.key({ modkey,           }, "w", function () 
+        mainmenu:show() end,
               {description = "show main menu", group = "awesome"}),
 
     -- Layout manipulation
@@ -110,7 +122,11 @@ globalkeys = gears.table.join(
               {description = "restore minimized", group = "client"}),
 
     -- Prompt
-    awful.key({ modkey },            "r",     function () awful.screen.focused().mypromptbox:run() end,
+    awful.key({ modkey },            "r",
+    function ()
+        local s = awful.screen.focused()
+            s.mypromptbox:run()
+    end,
               {description = "run prompt", group = "launcher"}),
 
     awful.key({ modkey }, "x",
@@ -145,11 +161,12 @@ clientkeys = gears.table.join(
               {description = "move to master", group = "client"}),
     awful.key({ modkey,           }, "o",      function (c) c:move_to_screen()               end,
               {description = "move to screen", group = "client"}),
-    awful.key({ modkey,           }, "t",      
+    awful.key({ modkey,           }, "t",
     function ()
         local s = awful.screen.focused()
         if s.mywibox then
             s.mywibox.visible = not s.mywibox.visible
+            tasklist.visible = not tasklist.visible
         end
     end,
     {description = "toggle mywibox", group = "awesome"}),
@@ -244,4 +261,4 @@ clientbuttons = gears.table.join(
     end)
 )
 -- Set keys
-root.keys(globalkeys)
+return globalkeys

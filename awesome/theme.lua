@@ -1,28 +1,34 @@
-
-
 local theme = {}
-
-theme.font          = "Monospace 10"
-
+local dpi = require("beautiful.xresources").apply_dpi
+theme.useless_gap = dpi(4)   -- đặt gap mặc định là 10px
+theme.font = "JetBrainsMono Nerd Font 9"
 -- Colors
-theme.bg_normal     = "#222831"
-theme.bg_focus      = "#345E80"
-theme.bg_urgent     = "#FF6F61"
-theme.bg_minimize   = "#444c5c"
+theme.bg_normal     = "#0a1232"
+theme.bg_focus      = "#081933"
+theme.bg_urgent     = "#456789"
+theme.bg_minimize   = "#2a2e36"
+theme.bg_progressbar= '#ee6a6d'
 
-theme.fg_normal     = "#E0E0E0"
-theme.fg_focus      = "#FFFFFF"
-theme.fg_urgent     = "#FFFFFF"
-theme.fg_minimize   = "#B0BEC5"
-
+theme.fg_normal     = "#cc4945"
+theme.fg_focus      = "#67ecf1"
+theme.fg_urgent     = "#000000"
+theme.fg_minimize   = "#555556"
+theme.fg_tool_normal= "#ffffff"
+theme.usage_bar = "#212121"
+theme.tag_bg = "#010103"
+theme.wrap_bg = theme.bg_normal
+theme.wrap_bg_tools = theme.bg_normal
+theme.wrap_fg_usage = theme.fg_normal
+theme.wrap_fg_tools = theme.fg_normal
 -- Borders
 theme.border_width  = 2
-theme.border_normal = "#222831"
-theme.border_focus  = "#345E80"
+theme.border_focus = "#dddddd"
+theme.border_normal = "#192005"
 theme.border_marked = "#FF6F61"
-
 -- Other
 theme.useless_gap   = 6
 theme.systray_icon_spacing = 6
 
+theme.menu_height = 16
+theme.menu_width = 16
 return theme
