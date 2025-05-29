@@ -7,7 +7,7 @@ local cpu_widget = wibox.widget{
         {
             id = "label",
             widget = wibox.widget.textbox,
-            text = 'CPU: ___'
+            text = 'CPU ___'
         },
         widget = wibox.container.margin,
         left = 10,
@@ -19,7 +19,7 @@ local cpu_widget = wibox.widget{
         force_height = 30,
         force_width  = 100,
         width = 80,
-        background_color = bg.bg_focus,
+        background_color = bg.bg_normal,
         color = bg.bg_progressbar
     },
     layout = wibox.layout.fixed.horizontal
@@ -53,7 +53,7 @@ gears.timer{
                         if delta_total > 0 then
                             local cpu_usage = (100*(delta_total - delta_idle))/delta_total
                             progressbar.value = cpu_usage/100
-                            label.text = string.format('CPU: %.1f%%', cpu_usage)
+                            label.text = string.format(' CPU %.1f%%', cpu_usage)
 
                         end
                         progressbar.last_total = total

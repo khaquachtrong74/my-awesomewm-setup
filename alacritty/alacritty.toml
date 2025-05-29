@@ -1,8 +1,8 @@
 [window]
 dimensions={ columns = 50, lines = 20}
 padding = { x = 10, y = 5}
-opacity = 0.67
-blur = false 
+#opacity = 0.67
+#blur = false 
 title = "Intern Wizard"
 startup_mode = "Windowed"#"Windowed" # Maximized | Fullscreen
 class = { instance = "Alacritty", general = "Alacrity" }
@@ -14,41 +14,19 @@ multiplier = 5 # Default= 3
 [font]
 normal = { family = "JetBrainsMono Nerd font", style = "Regular"}
 #normal = {family = "Sans"}
-size = 9
+size = 10 
 offset= { x = 1, y = 8}
 
+[general]
+import = [
+    "~/.config/alacritty/themes/moonlight_ii_vscode.toml"
+]
 
-# Alacritty Colors - Kanagawa Dragon Style
-
-[colors.primary]
-background = '#181616'    # Nền đen nâu cổ
-foreground = '#c5c9c5'    # Text trắng đục nhạt
-
-[colors.cursor]
-text = '#181616'          # Cursor nền
-cursor = '#c8c093'        # Cursor vàng cát
-
-[colors.normal]
-black   = '#0d0c0c'
-red     = '#c4746e'
-green   = '#8a9a7b'
-yellow  = '#c4b28a'
-blue    = '#8ba4b0'
-magenta = '#a292a3'
-cyan    = '#8ea4a2'
-white   = '#c8c093'
-
-[colors.bright]
-black   = '#1f1f28'
-red     = '#e46876'
-green   = '#98bb6c'
-yellow  = '#e6c384'
-blue    = '#7fb4ca'
-magenta = '#938aa9'
-cyan    = '#7aa89f'
-white   = '#dcd7ba'
 [colors]
+# Dùng bright-colors cho bold text
 draw_bold_text_with_bright_colors = true
+
+
 
 #[terminal]
 #shell = {program = "wsl.exe", args = ["~"]}

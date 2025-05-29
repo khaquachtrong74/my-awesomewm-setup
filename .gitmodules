@@ -1,0 +1,3 @@
+[submodule "alacritty/themes/alacritty-theme"]
+	path = alacritty/themes/alacritty-theme
+	url = git@github.com:khaquachtrong74/my-awesomewm-setup.git

@@ -1,5 +1,11 @@
 return{
     {
+    "shaunsingh/moonlight.nvim"
+    },
+    {
+    "q/K-DE-Cyberpunk-Neon"
+    },
+    {
     "rebelot/kanagawa.nvim",
     priority = 1000,
     config = function()
@@ -71,9 +77,6 @@ return{
         end
     },
     { 'folke/tokyonight.nvim',
-        config = function()
-        --      vim.cmd('colorscheme tokyonight')
-        end
     },
 
 }

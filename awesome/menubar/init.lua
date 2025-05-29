@@ -83,7 +83,7 @@ menubar.show_categories = true
 -- @tfield number geometry.width A forced width
 -- @tfield number geometry.height A forced height
 menubar.geometry = { width = 500,
-                     height = 400}
+                     height = 300}
 
 --- Width of blank space left in the right side.
 -- @tfield number right_margin
@@ -452,7 +452,7 @@ function menubar.show(scr)
     local geometry = menubar.geometry
     instance.geometry = {x = 100 or scrgeom.x,
                              y = 50 or scrgeom.y,
-                             height =  440 or gmath.round(beautiful.get_font_height() * 1.5),
+                             height =  110 or gmath.round(beautiful.get_font_height() * 1.5),
 
                              width = (geometry.width or scrgeom.width) - border_width * 2}
     instance.wibox:geometry(instance.geometry)

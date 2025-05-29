@@ -7,7 +7,7 @@ local ram_widget = wibox.widget{
         {
             id = "label",
             widget = wibox.widget.textbox,
-            text = 'RAM: ___'
+            text = 'RAM ___'
         },
 
         widget = wibox.container.margin,
@@ -21,7 +21,7 @@ local ram_widget = wibox.widget{
             force_height = 30,
             force_width  = 100,
             width = 100,
-            background_color = bg.bg_focus,
+            background_color = bg.bg_normal,
             color = bg.bg_progressbar
         
     },
@@ -42,7 +42,7 @@ gears.timer{
                     local total_mb = tonumber(total)
                     local percent = (used_mb/total_mb) * 100
                 progressbar.value = percent/100
-                label.text = string.format('RAM: %.1f%%', percent)
+                label.text = string.format('  RAM %.1f%%', percent)
                 end
             end
         )

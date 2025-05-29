@@ -14,6 +14,7 @@ return{
                     "clangd",
                     "lua_ls",
                     "cmake",
+                    "gopls",
                     "pyright"
                 }
             }
@@ -21,6 +22,7 @@ return{
               lspconfig.clangd.setup({})
               lspconfig.lua_ls.setup({})
               lspconfig.cmake.setup({})
+              lspconfig.gopls.setup({})
               lspconfig.pyright.setup({})
             require("lspconfig").lua_ls.setup({
                 settings = {

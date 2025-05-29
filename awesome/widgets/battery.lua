@@ -8,10 +8,16 @@ local batterytextwidget = wibox.widget{
         icon = "text",
         widget = wibox.widget.textbox,
 }
+local batteryicontext = wibox.widget{
+    icon = "text",
+    text = "  ",
+    widget = wibox.widget.textbox,
+}
 local mybatterywidget = wibox.widget{
     layout = wibox.layout.fixed.horizontal,
-    batteryiconwidget,
+--    batteryiconwidget,
     batterytextwidget,
+    batteryicontext,
 }
 local function get_battery ()
         local handler = io.popen("upower -i $(upower -e | grep BAT) | grep percentage")
@@ -24,11 +30,23 @@ local function get_battery ()
 gears.timer {
     timeout = 30,
     autostart = true,
-    call_now = true,
+    call_now = true, 
     callback = function()
         local percent = get_battery()
-        batteryiconwidget.image = os.getenv("HOME") .. "/.config/awesome/images/battery.png"
+--        batteryiconwidget.image = os.getenv("HOME") .. "/.config/awesome/images/battery.png"
+        local int_percent = tonumber(percent)
+        if int_percent > 85 then
+            batteryicontext.text = "  "
+        elseif int_percent > 65 then
+            batteryicontext.text = "  "
+        elseif int_percent > 25 then
+            batteryicontext.text = "  " 
+        else
+            batteryicontext.text = " 󰂎 "
+        end
         batterytextwidget.text = percent .. "%"
+
+
     end
 }
 local battery_notify

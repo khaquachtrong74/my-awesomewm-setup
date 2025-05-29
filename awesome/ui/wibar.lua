@@ -7,10 +7,6 @@ local xresources = require("beautiful.xresources")
 local dpi = xresources.apply_dpi
 local modkey = "Mod4"
 local theme = require("theme")
-local hotkeys_popup = require("awful.hotkeys_popup")
-local terminal = "alacritty"
-local editor = os.getenv("EDITOR") or "nano"
-local editor_cmd = terminal .. " -e " .. editor
 
 
 local set_wallpaper = function(s)
@@ -120,7 +116,7 @@ awful.screen.connect_for_each_screen(function(s)
         buttons = tasklist_buttons,
         style = {
             bg_normal = theme.bg_normal,   -- màu nền tasklist thường
-            bg_focus  = theme.bg_focus,   -- màu nền khi focus
+            bg_focus  = theme.bg_normal,   -- màu nền khi focus
             bg_minimize = theme.bg_minimize, -- minimize thì màu xám nhẹ
         },
         layout = {
@@ -147,7 +143,7 @@ awful.screen.connect_for_each_screen(function(s)
     local ram_widget      = require("widgets.ram")
     local volume_widget   = require("widgets.volume")
     local brightness_widget = require("widgets.brightness")
-    local tasklist = require('widgets.tasklist')
+--    local tasklist = require('widgets.tasklist')
     local mykeyboardlayout = awful.widget.keyboardlayout()
     local mymainmenu = require("mainmenu")
 
@@ -166,7 +162,7 @@ left:add(s.mytaglist)
 left:add(s.mypromptbox)
 local mid = wibox.layout.fixed.horizontal()
 --mid:add(wibox.widget.systray())
---mid:add(s.mytasklist)
+mid:add(s.mytasklist)
 --mid:add(wibox.widget.separator())
 local wrap_usage = wibox.widget{
     {
@@ -227,12 +223,12 @@ s.mywibox:setup {
     s.wibox_trigger:connect_signal("mouse::enter", function()
         s.mywibox.visible = true
         s.wibox_trigger.visible = false
-        tasklist.visible = true
+        --tasklist.visible = true
     end)
 
     s.mywibox:connect_signal("mouse::leave", function()
         s.mywibox.visible = false
         s.wibox_trigger.visible = true
-        tasklist.visible = false
+        --tasklist.visible = false
     end)
 end)

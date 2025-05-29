@@ -9,7 +9,7 @@ return {
       })
       local lspconfig = require("lspconfig")
       lspconfig.clangd.setup({
-		require("cmp_nvim_lsp").default_capabilities(),
+            require("cmp_nvim_lsp").default_capabilities(),
       })
       lspconfig.lua_ls.setup({
         settings = {
@@ -18,7 +18,6 @@ return {
           }
         }
       })
-      lspconfig.gopls.setup({})
     end
   },
   -- Completion

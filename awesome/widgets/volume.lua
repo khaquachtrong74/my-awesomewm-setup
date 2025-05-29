@@ -3,11 +3,15 @@ local awful = require("awful")
 local gears = require("gears")
 local func_sync_icon = require('function.func')
 local volumetextwidget = wibox.widget.textbox()
-local volumeiconwidget = func_sync_icon.make_icon('/home/nullcore/.config/awesome/images/high-volume.png')
+--local volumeiconwidget = func_sync_icon.make_icon('/home/nullcore/.config/awesome/images/high-volume.png')
+local volumeicontext = wibox.widget{
+    text = " 󰜟",
+    widget = wibox.widget.textbox()
+}
 local myvolumewidget = wibox.widget{
     layout = wibox.layout.fixed.horizontal,
-    volumeiconwidget,
     volumetextwidget,
+    volumeicontext
 }
 local function get_volume ()
     local f = io.popen("pamixer --get-volume")

@@ -2,7 +2,7 @@ local awful = require("awful")
 local gears = require("gears")
 local theme = require("theme")
 
-local tasklist = require('widgets.tasklist')
+--local tasklist = require('widgets.tasklist')
 client.connect_signal("request::titlebars", function(c)
     -- buttons for the titlebar
     local buttons = gears.table.join(
@@ -26,7 +26,7 @@ client.connect_signal("property::fullscreen", function (c)
     for s in screen do
         if s == c.screen then
             s.mywibox.visible     = not c.fullscreen
-            tasklist.visible = s.mywibox.visible
+            --tasklist.visible = s.mywibox.visible
         end
     end
 end)

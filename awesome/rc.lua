@@ -12,7 +12,7 @@ require("core.erros")
 -- Themes define colours, icons, font and wallpapers.
 beautiful.init("/home/" .. os.getenv("USER") .. "/.config/awesome/theme.lua")
 beautiful.border_radius = 4
-beautiful.get().wallpaper = "/home/" .. os.getenv("USER") .. "/.config/awesome/images/background.jpg"
+beautiful.get().wallpaper = "/home/" .. os.getenv("USER") .. "/.config/awesome/images/background.png"
 --beautiful.useless_gap = 2
 beautiful.font = "JetBrainsMono Nerd Font 12"
 awful.spawn.with_shell("picom --config ~/.config/picom/picom.conf")
@@ -29,14 +29,14 @@ gears.timer {
     end
 }
 awful.layout.layouts = require("layout")
---mainmenu = require("mainmenu")
+mainmenu = require("mainmenu")
 require("signals")
 require("ui.wibar")
 local global = require("keys.global")
 awful.rules.rules = require("rules").rules
 root.keys(global)
---root.buttons(gears.table.join(
---    awful.button({ }, 3, function () mainmenu:toggle() end),
---    awful.button({ }, 4, awful.tag.viewnext),
---    awful.button({ }, 5, awful.tag.viewprev)
---))
+root.buttons(gears.table.join(
+    awful.button({ }, 3, function () mainmenu:toggle() end),
+    awful.button({ }, 4, awful.tag.viewnext),
+    awful.button({ }, 5, awful.tag.viewprev)
+))

@@ -7,7 +7,7 @@ local terminal = "alacritty"
 local mainmenu = require('mainmenu')
 local beautiful = 'beautiful'
 
-local tasklist = require('widgets.tasklist')
+--local tasklist = require('widgets.tasklist')
 -- {{{ Key bindings
 local globalkeys = gears.table.join(
     awful.key({modkey}, '[', function()
@@ -166,7 +166,7 @@ clientkeys = gears.table.join(
         local s = awful.screen.focused()
         if s.mywibox then
             s.mywibox.visible = not s.mywibox.visible
-            tasklist.visible = not tasklist.visible
+            --tasklist.visible = not tasklist.visible
         end
     end,
     {description = "toggle mywibox", group = "awesome"}),
