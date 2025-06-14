@@ -133,7 +133,7 @@ local function label(o)
     local bg_color = theme.wrap_bg
     if o.focused then
         fg_color = theme.fg_focus
-        bg_color = theme.bg_focus
+        bg_color = theme.tag_bg
     end
     print(o.icon)
     return colortext(gstring.xml_escape(o.name), fg_color),
@@ -425,10 +425,10 @@ function menubar.show(scr)
         instance = {
             wibox = wibox{
                 ontop = true,
-                bg = theme.bg_focus,
+                bg = theme.wrap_bg,
                 fg = theme.fg_tool_normal,
                 border_width = 2,
-                border_color = "#291486",
+                border_color = theme.border_color,
             },
             widget = common_args.w,
             prompt = awful.widget.prompt(),
@@ -452,7 +452,7 @@ function menubar.show(scr)
     local geometry = menubar.geometry
     instance.geometry = {x = 100 or scrgeom.x,
                              y = 50 or scrgeom.y,
-                             height =  110 or gmath.round(beautiful.get_font_height() * 1.5),
+                             height =  160 or gmath.round(beautiful.get_font_height() * 1.5),
 
                              width = (geometry.width or scrgeom.width) - border_width * 2}
     instance.wibox:geometry(instance.geometry)

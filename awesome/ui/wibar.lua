@@ -21,7 +21,7 @@ end
 awful.screen.connect_for_each_screen(function(s)
     set_wallpaper(s)
     beautiful.get().wallpaper = "/home/" .. os.getenv("USER") .. "~/.config/awesome/images/background.jpg"
-    awful.tag({ "Code", "Web", "Study", "Nothing", "Social"}, s, awful.layout.layouts[1])
+    awful.tag({ "Browser", "Study", "Huauaua", "Nothing", "Recorder"}, s, awful.layout.layouts[1])
     s.mypromptbox = awful.widget.prompt()
     local taglist_buttons = gears.table.join(
         awful.button({ }, 1, function(t) t:view_only() end),
@@ -143,13 +143,12 @@ awful.screen.connect_for_each_screen(function(s)
     local ram_widget      = require("widgets.ram")
     local volume_widget   = require("widgets.volume")
     local brightness_widget = require("widgets.brightness")
---    local tasklist = require('widgets.tasklist')
     local mykeyboardlayout = awful.widget.keyboardlayout()
     local mymainmenu = require("mainmenu")
 
 local mylauncher = awful.widget.launcher(
     {
-        image = beautiful.theme_assets.awesome_icon(dpi(2048),theme.fg_focus,theme.bg_focus),
+        image = beautiful.theme_assets.awesome_icon(dpi(2048),theme.fg_normal,theme.bg_normal),
         menu = mymainmenu
     }
 )
@@ -195,6 +194,8 @@ local wrap_tools = wibox.widget{
 }
 local right = wibox.layout.fixed.horizontal()
 right.spacing = dpi(8)
+
+right:add(wibox.widget.systray())
 right:add(wrap_usage)
 right:add(wrap_tools)
 s.mywibox = awful.wibar({ position = "top", screen = s, height = 28, visible=false, ontop=true})
@@ -207,7 +208,8 @@ s.mywibox:setup {
         widget = wibox.widget.background
     },
     mid,
-    right
+    right, 
+    shape = gears.shape.rectangle
 }
     s.wibox_trigger = wibox({
         screen = s,

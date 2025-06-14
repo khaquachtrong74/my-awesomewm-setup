@@ -37,7 +37,7 @@ gears.timer {
         local int_percent = tonumber(percent)
         if int_percent > 85 then
             batteryicontext.text = "  "
-        elseif int_percent > 65 then
+        elseif int_percent > 45 then
             batteryicontext.text = "  "
         elseif int_percent > 25 then
             batteryicontext.text = "  " 

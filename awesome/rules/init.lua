@@ -44,11 +44,30 @@ M.rules = {
         rule_any = { class = {"firefox", "chrome"} },
         properties = {
             screen        = 1,
-            tag           = "Web",
+            tag           = "Browser",
             switch_to_tag = true,
             focus         = true,
         }
+    },
+ -- set my obs
+ {
+    rule = {class ="obs"},
+    properties = {
+        screen = 1,
+        tag = "Recorder",
+        switch_to_tag = true,
+        focus = true,
     }
+ },
+{
+    rule_any = {class = {"obsidian","code"}},
+    properties = {
+        screen = 1,
+        tag = "Study",
+        switch_to_tag = true,
+        focus = true,
+    }
+ },
 }
 return M
 

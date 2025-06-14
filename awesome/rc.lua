@@ -14,7 +14,7 @@ beautiful.init("/home/" .. os.getenv("USER") .. "/.config/awesome/theme.lua")
 beautiful.border_radius = 4
 beautiful.get().wallpaper = "/home/" .. os.getenv("USER") .. "/.config/awesome/images/background.png"
 --beautiful.useless_gap = 2
-beautiful.font = "JetBrainsMono Nerd Font 12"
+beautiful.font = "JetBrainsMono Nerd Font 9"
 awful.spawn.with_shell("picom --config ~/.config/picom/picom.conf")
 gears.timer {
     timeout = 60, -- check every 60 seconds
@@ -34,6 +34,7 @@ require("signals")
 require("ui.wibar")
 local global = require("keys.global")
 awful.rules.rules = require("rules").rules
+awful.spawn.with_shell("fcitx5 -d") -- for telex
 root.keys(global)
 root.buttons(gears.table.join(
     awful.button({ }, 3, function () mainmenu:toggle() end),
