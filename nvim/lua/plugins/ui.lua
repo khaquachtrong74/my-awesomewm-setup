@@ -1,5 +1,8 @@
 return{
     {
+        "shaunsingh/nord.nvim"
+    },
+    {
     "shaunsingh/moonlight.nvim"
     },
     {

@@ -24,3 +24,7 @@ vim.keymap.set("n", "<C-r>", ':!alacritty -e ranger &<CR>',
 {desc = "Manager folder",noremap = true, silent = true})
 -- HYBRID -- 
 vim.keymap.set({"n","i"}, "<C-f>","<cmd>Telescope current_buffer_fuzzy_find<CR>",{desc = "Fuzzy search in current file"})
+-- CMD live-server --
+vim.api.nvim_create_user_command("LiveServerHTML", function()
+  vim.cmd("!live-server --port=8080")
+end, {})

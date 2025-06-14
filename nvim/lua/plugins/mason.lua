@@ -11,19 +11,23 @@ return{
         config = function()
             require("mason-lspconfig").setup{
                 ensure_installed = {
-                    "clangd",
-                    "lua_ls",
-                    "cmake",
-                    "gopls",
-                    "pyright"
+                    "clangd", -- for c++/c 
+                    "lua_ls", -- for lua 
+--                    "cmake",
+                    "gopls", -- for golang
+                    "pyright", -- for python
+                    "ts_ls", --type-script: for nodejs
+                    "html"
                 }
             }
             local lspconfig = require("lspconfig")
               lspconfig.clangd.setup({})
               lspconfig.lua_ls.setup({})
-              lspconfig.cmake.setup({})
+ --             lspconfig.cmake.setup({})
+             lspconfig.ts_ls.setup({})
+             lspconfig.html.setup({})
               lspconfig.gopls.setup({})
-              lspconfig.pyright.setup({})
+             lspconfig.pyright.setup({})
             require("lspconfig").lua_ls.setup({
                 settings = {
                     Lua = {
