@@ -1,8 +1,8 @@
 [window]
-dimensions={ columns = 50, lines = 20}
-padding = { x = 10, y = 5}
-#opacity = 0.67
-#blur = false 
+dimensions={ columns = 50, lines = 30}
+padding = { x = 5, y = 0}
+#opacity = 0.9
+blur = true
 title = "Intern Wizard"
 startup_mode = "Windowed"#"Windowed" # Maximized | Fullscreen
 class = { instance = "Alacritty", general = "Alacrity" }
@@ -12,21 +12,14 @@ decorations_theme_variant = "none"#"Light" #"Dark"  # | Light
 history = 10000 # Default 10000
 multiplier = 5 # Default= 3
 [font]
-normal = { family = "JetBrainsMono Nerd font", style = "Regular"}
-#normal = {family = "Sans"}
+normal = { family = "JetBrainsMono Nerd Font", style = "Regular"}
+#normal = {family="sans"}
 size = 10 
-offset= { x = 1, y = 8}
-
+offset= { x = 1, y = 4}
 [general]
 import = [
-    "~/.config/alacritty/themes/moonlight_ii_vscode.toml"
+    "./themes/nord.toml"
 ]
-
-[colors]
-# Dùng bright-colors cho bold text
-draw_bold_text_with_bright_colors = true
-
-
 
 #[terminal]
 #shell = {program = "wsl.exe", args = ["~"]}
