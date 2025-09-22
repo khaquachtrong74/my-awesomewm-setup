@@ -6,14 +6,22 @@ local theme = require("theme")
 local func_sync_icon = require('function.func')
 local myiconclock = func_sync_icon.make_icon('/home/nullcore/.config/awesome/images/calendar.png')
 local myicontextclock = wibox.widget{
-    text = "  󱨰 ",
-    widget = wibox.widget.textbox,
+    {
+        text = " 󱨰 ",
+        widget = wibox.widget.textbox,
+    },
+    fg = theme.fg_normal,
+    widget = wibox.widget.background
 }
 local mytextclock = wibox.widget{
     {
-        text = os.date("%b-%d | %H:%M"),
-        widget = wibox.widget.textbox,
-        id = "clock_text"
+        {
+            text = os.date("%b-%d | %H:%M"),
+            widget = wibox.widget.textbox,
+            id = "clock_text"
+        },
+        fg = theme.fg_normal,
+        widget = wibox.widget.background
     },
     widget = wibox.container.margin,
     set_time = function(self, val)
@@ -127,4 +135,10 @@ myicontextclock:buttons(
         )
     )
 )
+
+
+function mytextclock:get_time()
+    local tb = self:get_children_by_id("clock_text")[1]
+    return tb and tb:get_text() or ""
+end
 return myclock

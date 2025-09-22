@@ -6,6 +6,7 @@ local hotkeys_popup = require("awful.hotkeys_popup")
 local terminal = "alacritty"
 local mainmenu = require('mainmenu')
 local beautiful = 'beautiful'
+local theme = require('theme')
 
 --local tasklist = require('widgets.tasklist')
 -- {{{ Key bindings
@@ -86,8 +87,10 @@ local globalkeys = gears.table.join(
 
     -- Standard program
     awful.key({ modkey }, "Return", function () awful.spawn(terminal) end, {description = "open a terminal", group = "launcher"}),
-    awful.key({modkey, "Shift"}, "s", function() awful.spawn("flameshot gui") end, {description = "Open screen shot", group = "launcer"}),
-    awful.key({ modkey, "Control" }, "r", awesome.restart,
+    awful.key({modkey, "Shift"}, "s", function()
+      awful.spawn("scrot -s /home/khat/Pictures/screenshot_%Y-%m-%d-%H%M%S.png")
+    end, {description = "Open screen shot", group = "launcer"}),
+    awful.key({ modkey, }, "r", awesome.restart,
               {description = "reload awesome", group = "awesome"}),
     awful.key({ modkey, "Shift"   }, "q", awesome.quit,
               {description = "quit awesome", group = "awesome"}),
@@ -120,15 +123,6 @@ local globalkeys = gears.table.join(
                   end
               end,
               {description = "restore minimized", group = "client"}),
-
-    -- Prompt
-    awful.key({ modkey },            "r",
-    function ()
-        local s = awful.screen.focused()
-            s.mypromptbox:run()
-    end,
-              {description = "run prompt", group = "launcher"}),
-
     awful.key({ modkey }, "x",
               function ()
                   awful.prompt.run {

@@ -2,15 +2,14 @@ local wibox = require("wibox")
 local awful = require("awful")
 local gears = require("gears")
 local func_sync_icon = require('function.func')
-local volumetextwidget = wibox.widget.textbox()
---local volumeiconwidget = func_sync_icon.make_icon('/home/nullcore/.config/awesome/images/high-volume.png')
+local textwidget = wibox.widget.textbox("...")
+local volumetextwidget = wibox.container.margin(textwidget, 10, 10, 10, 10)
 local volumeicontext = wibox.widget{
-    text = " 󰜟",
+    text = "󰜟",
     widget = wibox.widget.textbox()
 }
 local myvolumewidget = wibox.widget{
     layout = wibox.layout.fixed.horizontal,
-    volumetextwidget,
     volumeicontext
 }
 local function get_volume ()
@@ -32,10 +31,8 @@ awful.spawn.with_line_callback(
   "pactl subscribe",
   {
     stdout = function(line)
-      -- Mỗi khi có “Event 'change' on sink #…”
       if line:match("Event 'change' on sink") then
-        -- Cập nhật ngay
-        volumetextwidget.text = get_volume()
+        textwidget.text = get_volume()
       end
     end,
   }
@@ -45,7 +42,32 @@ gears.timer {
     autostart = true,
     call_now = true,
     callback = function()
-        volumetextwidget.text = get_volume()
+        textwidget.text = get_volume()
     end
 }
+local volumetext_popup = awful.popup{
+    ontop = true,
+    visible = false,
+    shape = gears.shape.rounded_rect,
+    border_width =1,
+    border_color = "#777777",
+    widget = {
+    {
+        widget = volumetextwidget,
+    },
+    bg = "#222222",
+    widget = wibox.container.background,
+    },
+    placement     = function(c)
+        awful.placement.top_right(c, { 
+            margins = { top=30, right=20 } 
+        })
+    end,
+}
+myvolumewidget:connect_signal("mouse::enter", function()
+    volumetext_popup.visible = true;
+end)
+myvolumewidget:connect_signal("mouse::leave", function()
+    volumetext_popup.visible = false;
+end)
 return myvolumewidget

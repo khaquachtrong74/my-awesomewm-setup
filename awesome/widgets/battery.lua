@@ -4,10 +4,6 @@ local naughty = require("naughty")
 local func_sync_icon = require('function.func')
 naughty.config.defaults.position = "top_right" 
 local batteryiconwidget = func_sync_icon.make_icon('/home/nullcore/.config/awesome/images/battery.png')
-local batterytextwidget = wibox.widget{
-        icon = "text",
-        widget = wibox.widget.textbox,
-}
 local batteryicontext = wibox.widget{
     icon = "text",
     text = "  ",
@@ -16,7 +12,6 @@ local batteryicontext = wibox.widget{
 local mybatterywidget = wibox.widget{
     layout = wibox.layout.fixed.horizontal,
 --    batteryiconwidget,
-    batterytextwidget,
     batteryicontext,
 }
 local function get_battery ()
@@ -44,21 +39,28 @@ gears.timer {
         else
             batteryicontext.text = " 󰂎 "
         end
-        batterytextwidget.text = percent .. "%"
-
-
     end
 }
 local battery_notify
+
 mybatterywidget:connect_signal("mouse::enter", function()
-    local status = io.popen("upower -i $(upower -e | grep BAT) | grep -E 'state|percentage|time'"):read("*a")
-    battery_notify=naughty.notify(
-        {
-            title = "Battery Status",
-            text = status,
-            timeout = 5
-        }
-    )
+    -- Chạy lệnh shell và lưu tất cả output vào biến status
+    local status = io.popen("upower -i $(upower -e | grep BAT) | grep --color=never -E 'state|percentage|time to|energy-full:'"):read("*a")
+    
+    -- Xóa các khoảng trắng thừa ở đầu và cuối
+    status = string.gsub(status, "^%s*(.-)%s*$", "%1")
+
+    -- Hủy thông báo cũ nếu nó đang hiển thị
+    if battery_notify then
+        naughty.destroy(battery_notify)
+    end
+
+    -- Chỉ sử dụng một khóa 'text' và gán biến 'status' đã có
+    battery_notify = naughty.notify({
+        title   = "Battery Status",
+        text    = status, -- Sửa ở đây
+        timeout = 5
+    })
 end)
 mybatterywidget:connect_signal("mouse::leave", function()
     if battery_notify then

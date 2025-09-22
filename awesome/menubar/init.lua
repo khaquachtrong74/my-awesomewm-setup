@@ -69,21 +69,23 @@ local compute_text_width = menubar.utils.compute_text_width
 -- extension is initialized. Use this if menubar takes much time to
 -- open.
 -- @tfield[opt=true] boolean cache_entries
-menubar.cache_entries = true
+menubar.cache_entries = false
 --- When true the categories will be shown alongside application
 -- entries.
 -- @tfield[opt=true] boolean show_categories
-menubar.show_categories = true
+menubar.show_categories = false
 --- Specifies the geometry of the menubar. This is a table with the keys
 -- x, y, width and height. Missing values are replaced via the screen's
 -- geometry. However, missing height is replaced by the font size.
 -- @table geometry
--- @tfield number geometry.x A forced horizontal position
+-- @tfield number geometry.x A forced vertical position
 -- @tfield number geometry.y A forced vertical position
 -- @tfield number geometry.width A forced width
 -- @tfield number geometry.height A forced height
 menubar.geometry = { width = 500,
-                     height = 300}
+                     height = 400,
+                    x=200,
+                    y=200}
 
 --- Width of blank space left in the right side.
 -- @tfield number right_margin
@@ -100,7 +102,7 @@ menubar.left_label = "◀◀"
 -- awful.widget.common.list_update adds three times a margin of dpi(4)
 -- for each item:
 -- @tfield number list_interspace
-local list_interspace = beautiful.xresources.apply_dpi(4) * 3
+local list_interspace = beautiful.xresources.apply_dpi(4)
 
 --- Allows user to specify custom parameters for prompt.run function
 -- (like colors).
@@ -108,7 +110,7 @@ local list_interspace = beautiful.xresources.apply_dpi(4) * 3
 menubar.prompt_args = {}
 
 -- Private section
-local current_item = 1
+local current_item = 1 
 local previous_item = nil
 local current_category = nil
 local shownitems = nil
@@ -129,15 +131,14 @@ end
 -- @param o The menu item.
 -- @return item name, item background color, background image, item icon.
 local function label(o)
-    local fg_color = theme.fg_normal
+    local fg_color = theme.fg_tool
     local bg_color = theme.wrap_bg
     if o.focused then
         fg_color = theme.fg_focus
         bg_color = theme.tag_bg
     end
-    print(o.icon)
     return colortext(gstring.xml_escape(o.name), fg_color),
-            bg_color, bg_color, o.icon
+            bg_color, bg_color,nil, o.icon and {icon_size=16}
 end
 
 local function load_count_table()
@@ -179,7 +180,7 @@ local function perform_action(o)
         current_category = o.key
         local new_prompt = shownitems[current_item].name .. ": "
         previous_item = current_item
-        current_item = 1
+        current_item = 2
         return true, "", new_prompt
     elseif shownitems[current_item].cmdline then
         awful.spawn(shownitems[current_item].cmdline)
@@ -222,10 +223,10 @@ local function get_current_page(all_items, query, scr)
         item.width = item.width or (compute_text_width(item.name, scr) + (item.icon and instance.geometry.height or 0) + list_interspace)
         if width_sum + item.width > available_space then
             if current_item < i then
-                table.insert(current_page, { name ="ᕕ( ᐛ )ᕗ", icon = nil })
+                table.insert(current_page, { name ='', icon = nil })
                 break
             end
-            current_page = { { name = "(❍ᴥ❍ʋ)", icon = nil }, item, }
+            current_page = { { name = "", icon = nil }, item, }
             width_sum = item.width
         else
             table.insert(current_page, item)
@@ -335,7 +336,7 @@ local function menulist_update(scr)
 
     if #shownitems > 0 then
         -- Insert a run item value as the last choice
-        table.insert(shownitems, { name = "(•-•)⌐: " .. query, cmdline = query, icon = nil })
+--        table.insert(shownitems, { name = "" .. query, cmdline = query, icon = nil })
 
         if current_item > #shownitems then
             current_item = #shownitems
@@ -347,7 +348,7 @@ local function menulist_update(scr)
 
     common.list_update(common_args.w, nil, label,
                        common_args.data,
-                       get_current_page(shownitems, query, scr))
+                       shownitems)
 end
 
 --- Refresh menubar's cache by reloading .desktop files.
@@ -378,13 +379,13 @@ local function prompt_keypressed_callback(mod, key, comm)
         if comm == "" and current_category then
             current_category = nil
             current_item = previous_item
-            return true, nil, colortext("Run: ", "#ffffff")
+            return true, nil, nil
         end
     elseif key == "Escape" then
         if current_category then
             current_category = nil
             current_item = previous_item
-            return true, nil, colortext("Run: ", "#ffffff")
+            return true, nil, nil
         end
     elseif key == "Home" then
         current_item = 1
@@ -408,77 +409,200 @@ end
 
 --- Show the menubar on the given screen.
 -- @param[opt] scr Screen.
+--
+--
 function menubar.show(scr)
     scr = get_screen(scr or awful.screen.focused() or 1)
-    local border_width = beautiful.menubar_border_width or beautiful.menu_border_width or 0
-
+    local border_width = beautiful.menubar_border_width
+                         or beautiful.menu_border_width
+                         or 0
     if not instance then
-        -- Add to each category the name of its key in all_categories
-        for k, v in pairs(menubar.menu_gen.all_categories) do
-            v.key = k
-        end
-
-        if menubar.cache_entries then
-            menubar.refresh(scr)
-        end
-
         instance = {
-            wibox = wibox{
-                ontop = true,
-                bg = theme.wrap_bg,
-                fg = theme.fg_tool_normal,
-                border_width = 2,
-                border_color = theme.border_color,
+            wibox       = wibox {
+                ontop        = true,
+                bg           = theme.bg_tool,
+                fg           = theme.fg_tool,
+                border_width = 3,
+                border_color = theme.bg_tool,
             },
-            widget = common_args.w,
-            prompt = awful.widget.prompt(),
-            query = nil,
+            prompt      = awful.widget.prompt(),
+            query       = nil,
             count_table = nil,
         }
+        -- Raw list layout từ common.list_update
+        common_args = {
+          w    = wibox.layout.fixed.vertical(),
+          data = setmetatable({}, { __mode = 'kv' }),
+        }
+        -- 2. Bọc vào scroll container
+        local scroll_wrapped = wibox.widget {
+            common_args.w,
+            margins = 0,
+            widget  = wibox.container.margin,
+        }
+        instance.widget     = scroll_wrapped
+        instance.page_start = 0
+        -- 3. Xây layout chung: prompt + scrollable list
         local layout = wibox.layout.fixed.vertical()
         layout:add(instance.prompt)
         layout:add(instance.widget)
         instance.wibox:set_widget(layout)
     end
 
-    if instance.wibox.visible then -- Menu already shown, exit
+    -- 4. Nếu đang hiển thị, không làm gì
+    if instance.wibox.visible then
         return
     elseif not menubar.cache_entries then
         menubar.refresh(scr)
     end
 
-    -- Set position and size
+    -- 5. Định vị & kích thước
     local scrgeom = scr.workarea
-    local geometry = menubar.geometry
-    instance.geometry = {x = 100 or scrgeom.x,
-                             y = 50 or scrgeom.y,
-                             height =  160 or gmath.round(beautiful.get_font_height() * 1.5),
-
-                             width = (geometry.width or scrgeom.width) - border_width * 2}
+    local mwidth  = menubar.geometry.width or (scrgeom.width - border_width*2)
+    local mheight = menubar.geometry.height or
+                    gmath.round(beautiful.get_front_height() * 1.5)
+    local mx = scrgeom.x + (scrgeom.width  - mwidth )/2
+    local my = scrgeom.y + (scrgeom.height - mheight)/2
+    instance.geometry = { x = mx, y = my, width = mwidth, height = mheight }
     instance.wibox:geometry(instance.geometry)
 
-    current_item = 1
+    -- 6. Reset state, fill list
+    current_item     = 1
     current_category = nil
     menulist_update(scr)
 
-    local prompt_args = menubar.prompt_args or {}
-
+    -- 7. Chạy prompt với callback tự động scroll
     awful.prompt.run(setmetatable({
-        prompt              = "☉ ‿ ⚆ : ",
+        prompt              = '<span foreground="#88c0d0"></span> ',
         textbox             = instance.prompt.widget,
         completion_callback = awful.completion.shell,
         history_path        = gfs.get_cache_dir() .. "/history_menu",
         done_callback       = menubar.hide,
         changed_callback    = function(query)
             instance.query = query
-           instance.prompt.widget:set_markup( "☉ ‿ ⚆ : " .. gstring.xml_escape(query))
+            local markup = "<span foreground='#88c0d0'> "
+                         .. gstring.xml_escape(query)
+                         .. "</span>"
+            instance.prompt.widget:set_markup(markup)
             menulist_update(scr)
         end,
-        keypressed_callback = prompt_keypressed_callback,
-        fg                  = theme.fg_normal
-    }, {__index=prompt_args}))
+        keypressed_callback = function(mod, key, comm)
+            -- 7.1 Gọi logic gốc để cập nhật current_item
+            local handled, new_cmd, new_prompt =
+                prompt_keypressed_callback(mod, key, comm)
+
+            if handled and instance.scroll then
+                -- Tính số item có thể hiển thị trên khung
+                local total_items   = #common_args.w.children
+                local available_h   = instance.geometry.height
+                                     - instance.prompt.widget:height()
+                                     - 8  -- 2*margin
+                local page_size     = math.floor(available_h / instance.scroll.step)
+
+                if key == "Down" then
+                    -- nếu focus đã vượt xuống dưới khung
+                    if current_item > instance.page_start + page_size - 1 then
+                        instance.scroll:scroll(0, instance.scroll.step)
+                        instance.page_start = instance.page_start + 1
+                    end
+                elseif key == "Up" then
+                    -- nếu focus đã vượt lên trên khung
+                    if current_item < instance.page_start then
+                        instance.scroll:scroll(0, -instance.scroll.step)
+                        instance.page_start = instance.page_start - 1
+                    end
+                elseif key == "Home" then
+                    instance.scroll:scroll_to_beginning()
+                    instance.page_start = 1
+                elseif key == "End" then
+                    instance.scroll:scroll_to_end()
+                    instance.page_start = math.max(total_items - page_size + 1, 1)
+                end
+            end
+
+            return handled, new_cmd, new_prompt
+        end,
+        fg = theme.fg_focus,
+    }, { __index = menubar.prompt_args }))
+
+    -- 8. Hiển thị
     instance.wibox.visible = true
 end
+-- function menubar.show(scr)
+--     scr = get_screen(scr or awful.screen.focused() or 1)
+--     local border_width = beautiful.menubar_border_width or beautiful.menu_border_width or 0
+-- 
+--     if not instance then
+--         -- Add to each category the name of its key in all_categories
+--         for k, v in pairs(menubar.menu_gen.all_categories) do
+--             v.key = k
+--         end
+-- 
+--         if menubar.cache_entries then
+--             menubar.refresh(scr)
+--         end
+-- 
+--         instance = {
+--             wibox = wibox{
+--                 ontop = true,
+--                 bg = theme.bg_tool,
+--                 fg = theme.fg_tool,
+--                 border_width = 3,
+--                 border_color = theme.bg_tool,
+--             },
+--             
+--             widget = common_args.w,
+--             prompt = awful.widget.prompt(),
+--             query = nil,
+--             count_table = nil,
+--         }
+--         local layout = wibox.layout.fixed.vertical()
+--         layout:add(instance.prompt)
+--         layout:add(instance.widget)
+--         instance.wibox:set_widget(layout)
+--     end
+-- 
+--     if instance.wibox.visible then -- Menu already shown, exit
+--         return
+--     elseif not menubar.cache_entries then
+--         menubar.refresh(scr)
+--     end
+-- 
+--     -- Set position and size
+--     local scrgeom = scr.workarea
+--     local mwidth = menubar.geometry.width or (scrgeom.width - border_width*2)
+--     local mheight = menubar.geometry.height or gmath.round(beautiful.get_front_height() * 1.5)
+--     local mx = scrgeom.x + (scrgeom.width - mwidth)/2 
+--     local my = scrgeom.y + (scrgeom.height - mheight)/2 
+--     local geometry = menubar.geometry
+--     instance.geometry = {x = mx,
+--                          y = my,
+--                          height =  200,
+--                          width = mwidth}
+--     instance.wibox:geometry(instance.geometry)
+-- 
+--     current_item = 1
+--     current_category = nil
+--     menulist_update(scr)
+-- 
+--     local prompt_args = {}
+--     awful.prompt.run(setmetatable({
+--         prompt = '<span foreground="#88c0d0">  </span> ',
+--         textbox             = instance.prompt.widget,
+--         completion_callback = awful.completion.shell,
+--         history_path        = gfs.get_cache_dir() .. "/history_menu",
+--         done_callback       = menubar.hide,
+--         changed_callback    = function(query)
+--             instance.query = query
+--             local q     = "<span foreground='#88c0d0'>  " .. gstring.xml_escape(query) .. "</span>"
+--             instance.prompt.widget:set_markup(q)
+--             menulist_update(scr)
+--         end,
+--         keypressed_callback = prompt_keypressed_callback,
+--         fg                  = theme.fg_focus
+--     }, {__index=prompt_args}))
+--     instance.wibox.visible = true
+-- end
 
 --- Hide the menubar.
 function menubar.hide()

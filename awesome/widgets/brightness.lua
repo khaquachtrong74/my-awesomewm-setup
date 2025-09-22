@@ -4,7 +4,7 @@ local gears = require("gears")
 local func_sync_icon = require('function.func')
 --local brightnessicon = func_sync_icon.make_icon('/home/nullcore/.config/awesome/images/day-mode.png')
 local brightnessicontext = wibox.widget{
-    text = "󰃠  ",
+    text = "󰃠",
     widget = wibox.widget.textbox()
 }
 local brightnesstext = wibox.widget{
@@ -45,13 +45,13 @@ gears.timer {
 --    brightnesstext:get_children_by_id('text')[1].text    = get_brightness()
         local int_percent = tonumber(get_brightness())
         if int_percent > 85 then
-            brightnessicontext.text = "󰃠  "
+            brightnessicontext.text = "󰃠 "
         elseif int_percent >= 50 then
-            brightnessicontext.text = "󰃟  "
+            brightnessicontext.text = "󰃟 "
         elseif int_percent > 25 then
-            brightnessicontext.text = "󰃝  "
+            brightnessicontext.text = "󰃝 "
         else
-            brightnessicontext.text = "󰃞  "
+            brightnessicontext.text = "󰃞 "
         end
       brightnesstext.text = get_brightness() .. "%"
     end

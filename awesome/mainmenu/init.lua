@@ -17,14 +17,14 @@ local myawesomemenu = {
    { "manual", terminal .. " -e man awesome" },
    { "edit config", editor_cmd .. " " .. awesome.conffile },
    { "restart", awesome.restart },
-      { "quit", function() awesome.quit() end },
+  { "quit", function() awesome.quit() end },
 }
 local myoptions = {
     {"open terminal", terminal},
-    {"neofetch", terminal .. " -e neofetch"},
-    { "vesktop-discord", "vesktop"},
-    { "obs","obs"},
-    {"snap", "flameshot gui"},
+    {"obs","obs"},
+    {"obsidian", "obsidian"},
+    {"dolphin", "dolphin"},
+    {"firefox","firefox"},
 }
 local mymainmenu = awful.menu({ items = { { "awesome", myawesomemenu, beautiful.theme_assets.awesome_icon(dpi(2048),theme.fg_focus,theme.bg_focus)
 },{ "optional", myoptions}}})
