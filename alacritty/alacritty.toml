@@ -1,9 +1,9 @@
 [window]
-dimensions={ columns = 50, lines = 30}
-padding = { x = 5, y = 0}
-#opacity = 0.9
+dimensions={ columns = 50, lines = 100}
+padding = { x = 10, y = 10}
+opacity = 0.92
 blur = true
-title = "Intern Wizard"
+title = "Alacritty customize"
 startup_mode = "Windowed"#"Windowed" # Maximized | Fullscreen
 class = { instance = "Alacritty", general = "Alacrity" }
 decorations = "none"
@@ -13,21 +13,12 @@ history = 10000 # Default 10000
 multiplier = 5 # Default= 3
 [font]
 normal = { family = "JetBrainsMono Nerd Font", style = "Regular"}
-#normal = {family="sans"}
-size = 10 
+size = 11
 offset= { x = 1, y = 4}
 [general]
 import = [
-    "./themes/nord.toml"
+    "./themes/pastelnight.toml"
 ]
-
-#[terminal]
-#shell = {program = "wsl.exe", args = ["~"]}
-
-# shell = "zellij"
-# debug otions are meant to help troubleshoot issues with Alacritty
-# These can change or be removed entirely without warning
-# So their stability shouldn't be relied upon
 [debug]
 render_timer=false
-highlight_damage = false # | if u want to hit yourself, you can select true
+highlight_damage = false 

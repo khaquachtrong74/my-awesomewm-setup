@@ -1,0 +1,59 @@
+# PastelNight theme for Alacritty (dark + pastel)
+
+[colors.primary]
+background = "#1e1e2e"
+foreground = "#cdd6f4"
+
+[colors.cursor]
+text   = "#1e1e2e"
+cursor = "#cdd6f4"
+
+[colors.selection]
+text       = "#cdd6f4"
+background = "#313244"
+
+[colors.search.matches]
+foreground = "#1e1e2e"
+background = "#f9e2af"
+
+[colors.search.focused_match]
+foreground = "#1e1e2e"
+background = "#89b4fa"
+
+[colors.hints.start]
+foreground = "#1e1e2e"
+background = "#a6e3a1"
+
+[colors.hints.end]
+foreground = "#1e1e2e"
+background = "#94e2d5"
+
+[colors.normal]
+black   = "#181825"
+red     = "#f38ba8"
+green   = "#a6e3a1"
+yellow  = "#f9e2af"
+blue    = "#89b4fa"
+magenta = "#cba6f7"
+cyan    = "#94e2d5"
+white   = "#bac2de"
+
+[colors.bright]
+black   = "#45475a"
+red     = "#f2a6b6"
+green   = "#b7e7b7"
+yellow  = "#fae7b9"
+blue    = "#a3c5fb"
+magenta = "#d6b6fa"
+cyan    = "#a8eae0"
+white   = "#cdd6f4"
+
+[colors.dim]
+black   = "#11111b"
+red     = "#e27a98"
+green   = "#97d99a"
+yellow  = "#e8d79b"
+blue    = "#7aa2f7"
+magenta = "#bfa1ef"
+cyan    = "#84d9cf"
+white   = "#a6adc8"
