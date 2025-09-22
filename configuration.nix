@@ -1,12 +1,14 @@
 # Edit this configuration file to define what should be installed on
 # your system. Help is available in the configuration.nix(5) man page, on
 # https://search.nixos.org/options and in the NixOS manual (`nixos-help`).
-{ config, lib, pkgs, ... }:
+{ config, lib, pkgs, xdg, ... }:
 {
   imports =
     [ # Include the results of the hardware scan.
       ./hardware-configuration.nix
-      ./nbfc.nix  # Fan control
+      ./modules/nbfc.nix  # Fan control
+      ./modules/system/boot.nix #boot 
+      ./modules/virtual-machine.nix
     (import ./modules/sddm.nix {
         inherit pkgs lib;
         themeName = "where_is_my_sddm_theme";
@@ -24,19 +26,15 @@
         ];
     })
  ];
-  # Use the systemd-boot EFI boot loader.
-#  boot.loader.systemd-boot.enable = true;
-  boot.loader.efi.canTouchEfiVariables = true;
-  boot.loader.grub.enable = true;
-  boot.loader.grub.devices = [ "nodev" ];
-  boot.loader.grub.efiSupport=true;
-  boot.loader.grub.useOSProber = true;
+
+ nix.settings.experimental-features = ["nix-command" "flakes"];
 
    networking.hostName = "nixos"; # Define your hostname.
   # Pick only one of the below networking options.
   # networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
    networking.networkmanager.enable = true;  # Easiest to use and most distros use this by default.
    networking.firewall.enable = true;
+   networking.firewall.allowPing = false;
 
   # Set your time zone.
   time.timeZone = "Asia/Ho_Chi_Minh";
@@ -56,7 +54,6 @@
 
   # Enable the X11 windowing system.
   # services.xserver.enable = true;
-  nixpkgs.config.allowUnfree=true;
 location.provider = "geoclue2";
 location = {
 	latitude = "10.7769";
@@ -64,6 +61,11 @@ location = {
 };
 
 services={
+        hardware.openrgb.enable=true;
+        mysql ={
+            enable = true;
+            package = pkgs.mariadb;
+        };
         xserver = {
             enable = true;
             videoDrivers = [ "nvidia" ];
@@ -77,11 +79,14 @@ services={
                 ];
             };
         };
-        displayManager = {
-            defaultSession = "none+awesome";
-        };
+            displayManager = {
+                defaultSession = "none+awesome";
+                autoLogin.enable = false;
+                autoLogin.user = "khat";
+            };
+        
         # REMEMBER______________________
-        upower ={ # FOr limit charge
+        upower ={ 
             enable=true;
         };
         pipewire = {
@@ -100,14 +105,7 @@ services={
             };
         };
 };
-fonts = {
-    enableDefaultPackages = true;
-    packages = with pkgs; [ 
-        nerd-fonts.noto
-        nerd-fonts.symbols-only
-        noto-fonts-cjk-sans
-    ];
-};
+
 hardware = {
     graphics = {
         enable = true;
@@ -152,8 +150,10 @@ boot.kernelParams = [
     "i915.enable_guc=2"       
     "i915.enable_fbc=1"       
 ];
+boot.kernelModules=["acer-wmi"];
 
 nixpkgs.config.nvidia.acceptLicense = true;
+nixpkgs.config.allowUnfree = true;
 
 
 
@@ -180,7 +180,7 @@ security.polkit.enable=true;
   # Define a user account. Don't forget to set a password with ‘passwd’.
    users.users.khat = {
      isNormalUser = true;
-     extraGroups = [ "wheel" ]; # Enable ‘sudo’ for the user.
+     extraGroups = [ "wheel" "dialout"]; # Enable ‘sudo’ for the user.
      packages = with pkgs; [
        tree
        unzip
@@ -188,27 +188,49 @@ security.polkit.enable=true;
        prometheus-nvidia-gpu-exporter
        brightnessctl
        bluez
-       heroic
        bluez-tools
-       go
-       conda
        picom
        fastfetch
-       python314
-       python313Packages.pip
        gcc
+       gnumake
+       binutils
+       coreutils
        obs-studio
+       brave
+
        flameshot
+       scrot
+       xclip
+       xsel
+       clipmenu
+       ffmpeg
+       btop
+
        kdePackages.kdenlive
        vesktop
-       nodejs_24
-       cava  #rice
-       pipes #rice
-#       libreoffice-qt6-fresh
-       xclip
+       realvnc-vnc-viewer
+
+       # rice
+       #cava  
+       #pipes 
+       #tty-clock 
+       #
+       wpsoffice
        anydesk
+       mpv
+       xorg.xmodmap
        obsidian
        vscode
+       bash
+       ranger
+       feh
+
+       #arduino-cli
+       bashInteractive
+       screen
+       kdePackages.dolphin
+       heroic
+       texstudio
      ];
    };
 
@@ -220,21 +242,29 @@ security.polkit.enable=true;
 
  environment.systemPackages = with pkgs; [
    vim # Do not forget to add an editor to edit configuration.nix! The Nano editor is also installed by default.
+   home-manager
+   clang-tools
+   cmake
+   miktex
    wget
    git
    alacritty
+   python312Packages.pip
    neovim
-   btop
    pamixer
    nvtopPackages.nvidia
    toybox
    syncthing
-   pcmanfm
    pulseaudioFull
    awesome
+   google-chrome
    live-server
    lm_sensors
-   sddm-astronaut
+   zlib
+   openssl
+   libglvnd
+   libGL 
+   go
 ];
 
 
@@ -263,7 +293,7 @@ environment.sessionVariables = {
   # List services that you want to enable:
 
   # Enable the OpenSSH daemon.
-  # services.openssh.enable = true;
+  services.openssh.enable = true;
 
   # Open ports in the firewall.
   # networking.firewall.allowedTCPPorts = [ ... ];
@@ -293,7 +323,5 @@ environment.sessionVariables = {
   # and migrated your data accordingly.
   #
   # For more information, see `man configuration.nix` or https://nixos.org/manual/nixos/stable/options#opt-system.stateVersion .
-  system.stateVersion = "25.05"; # Did you read the comment?
-  # Virtual machine
+  system.stateVersion = "25.05";
 }
-
